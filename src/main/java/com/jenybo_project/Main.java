@@ -29,15 +29,19 @@ public class Main {
     public List<Customer> getCustomer(){
         return customerRepository.findAll();
     }
-    record NewCustomerRequest(String name, String email, Integer age) {
-
-    }
+    record NewCustomerRequest(String name, String email, Integer age) { }
     @PostMapping
     public void addCustomer(@RequestBody NewCustomerRequest request){
         Customer customer = new Customer();
-        customer.setName(request.name());
-        customer.setEmail(request.email());
-        customer.setAge(request.age());
+        if(Objects.nonNull(request.name()) && !"".equalsIgnoreCase(request.name())){
+            customer.setName(request.name());
+        }
+        if(Objects.nonNull(request.email()) && !"".equalsIgnoreCase(request.email())){
+            customer.setEmail(request.email());
+        }
+        if(request.age() != null){
+            customer.setAge(request.age());
+        }
         customerRepository.save(customer);
     }
     @DeleteMapping("{customerId}")
